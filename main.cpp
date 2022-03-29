@@ -17,10 +17,13 @@ struct heap
 
 bool isNum(char input[]);
 int charToInt(char input[]);
+int add(int heap[], int count);
 
 int main()
 {
-  while(true)
+  int heap[101] = {0};
+  int count = 1;
+  while(count <= 101)
     {
       char input[80];
       cin.getline(input, 80, '\n');
@@ -101,4 +104,62 @@ int charToInt(char input[])
       num = num + intArr[i]*pow(10, (index-1-i));
     }
   return num;
+}
+
+int add(int heap[], int count, int toAdd)
+{
+  heap[count] = toAdd;
+
+  int i = 1;
+  int numOfParents = 0;
+  while(true)
+    {
+      if(count < pow(2, i))
+	{
+	  numOfParents = i-1;
+	  break;
+	}
+      else
+	{
+	  i++;
+	}
+	    
+    }
+
+  //compares the added child to its parent
+  for(int j = 0; j<numOfParents; j++)
+    {
+      if(count%2 == 0) //even
+	{
+	  if(toAdd > heap[count/2])
+	    {
+	      int temp = heap[count/2];
+	      heap[count/2] = toAdd;
+	      heap[count] = temp;
+	      count = count/2;
+	    }
+	  else
+	    {
+	      break;
+	    }
+	}
+      else if(count%2 == 1)
+	{
+	  int tempCount = (count - 1) / 2;
+	  if(toAdd > heap[tempCount))
+	  {
+	    int temp = heap[tempCount];
+	    heap[tempCount] = toAdd;
+	    heap[count] = toAdd;
+	    count = tempCount;
+	  }
+	  else
+	    {
+	      break;
+	    }
+	}	    
+      
+    }
+	
+
 }
