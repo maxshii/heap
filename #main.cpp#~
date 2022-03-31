@@ -18,6 +18,7 @@ struct heap
 bool isNum(char input[]);
 int charToInt(char input[]);
 void add(int heap[], int count, int toAdd);
+void print(int heap[]);
 
 int main()
 {
@@ -164,4 +165,24 @@ void add(int heap[], int count, int toAdd)
     }
 	
 
+}
+
+void print(int heap[], int count)
+{
+  if(count = 127)
+    {
+      
+    }
+  print(heap[], count*2+1);
+  
+  for(int i = 0; i < count; i++)
+    {
+      cout << "     ";
+    }
+
+  
+  cout << heap[
+
+  
+  
 }
