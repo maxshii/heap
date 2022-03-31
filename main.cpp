@@ -1,167 +1,150 @@
 /*
- * This program creates a heap that contains numbers. 
+ * This program creates a heap that contains numbers.
  * By: Max Shi
  * 3/16/2022
  */
 
-#include <iostream>
-#include <fstream>
 #include <cctype>
 #include <cmath>
-using namespace::std;
+#include <fstream>
+#include <iostream>
+using namespace ::std;
 
-struct heap
-{
-  int arr[100];
+struct heap {
+	int arr[100];
 };
 
 bool isNum(char input[]);
 int charToInt(char input[]);
 void add(int heap[], int count, int toAdd);
+void print(int heap[], int count);
 
-int main()
-{
-  int heap[101] = {0};
-  int count = 1;
-  while(count <= 101)
-    {
-      char input[80];
-      cin.getline(input, 80, '\n');
+int main() {
+	int heap[101] = {0};
+	int count = 1;
+	while (count <= 10) {
+		char input[80];
+		cin.getline(input, 80, '\n');
 
-      
-      if(isNum(input) == true)
-	{
-	  add(heap, count, charToInt(input));
-	  count++;
-	}
-      else
-	{
-	  fstream file;
-	  file.open(input);
-	  if(file.is_open())
-	    {
-	      int num;
-	      while(file >> num)
-		{
-		  add(heap, count, charToInt(input));
-		  count++;
+		if (isNum(input) == true) {
+			add(heap, count, charToInt(input));
+			count++;
+		} else {
+			fstream file;
+			file.open(input);
+			if (file.is_open()) {
+				int num;
+				while (file >> num) {
+					add(heap, count, num);
+					count++;
+				}
+			} else {
+				cout << "Error opening file.\n";
+			}
 		}
-	    }
-	  else
-	    {
-	      cout << "Error opening file.\n";
-	    }
+    print(heap, 1);
 	}
-    }
+  cout << heap[5];
   
 }
 
-bool isNum(char input[])
-{
-  int index = 0;
-  int nonDigitCount = 0;
-  while(true)
-    {
-      if(input[index] == '\0')
-	{
-	  break;
+bool isNum(char input[]) {
+	int index = 0;
+	int nonDigitCount = 0;
+	while (true) {
+		if (input[index] == '\0') {
+			break;
+		} else if (isdigit(input[index]) == 0) {
+			nonDigitCount++;
+		}
+		index++;
 	}
-      else if(isdigit(input[index]) == 0)
-	{
-	  nonDigitCount++;
-	}
-      index++;	
-    }
 
-  if(nonDigitCount > 0)
-    {
-      return false;
-    }
-  else
-    {
-      return true;
-    }
+	if (nonDigitCount > 0) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
-int charToInt(char input[])
-{
-  int index = 0;
-  int intArr[80];
-  while(true)
-    {
-      if(input[index] == '\0')
-	{
-	  break;
+int charToInt(char input[]) {
+	int index = 0;
+	int intArr[80];
+	while (true) {
+		if (input[index] == '\0') {
+			break;
+		} else {
+			intArr[index] = input[index] - '0';
+		}
+		index++;
 	}
-      else
-	{
-	  intArr[index] = input[index] - '0';
-	}
-      index++;
-    }
 
-  int num = 0;
-  for(int i = 0; i < index; i++)
-    {
-      num = num + intArr[i]*pow(10, (index-1-i));
-    }
-  return num;
+	int num = 0;
+	for (int i = 0; i < index; i++) {
+		num = num + intArr[i] * pow(10, (index - 1 - i));
+	}
+	return num;
 }
 
-void add(int heap[], int count, int toAdd)
-{
-  heap[count] = toAdd;
+void add(int heap[], int count, int toAdd) {
+	heap[count] = toAdd;
 
-  int i = 1;
-  int numOfParents = 0;
-  while(true)
-    {
-      if(count < pow(2, i))
-	{
-	  numOfParents = i-1;
-	  break;
+	int i = 1;
+	int numOfParents = 0;
+	while (true) {
+		if (count < pow(2, i)) {
+			numOfParents = i - 1;
+			break;
+		} else {
+			i++;
+		}
 	}
-      else
-	{
-	  i++;
-	}
-	    
-    }
 
-  //compares the added child to its parent
-  for(int j = 0; j<numOfParents; j++)
-    {
-      if(count%2 == 0) //even
-	{
-	  if(toAdd > heap[count/2])
-	    {
-	      int temp = heap[count/2];
-	      heap[count/2] = toAdd;
-	      heap[count] = temp;
-	      count = count/2;
-	    }
-	  else
-	    {
-	      break;
-	    }
+	// compares the added child to its parent
+	for (int j = 0; j < numOfParents; j++) {
+		if (count % 2 == 0) // even
+		{
+			if (toAdd > heap[count / 2]) { //if greater than parent
+				
+        int temp = heap[count / 2]; //value of parent
+				heap[count / 2] = toAdd; //parent = child
+				heap[count] = temp; //child = parent value
+				count = count / 2;
+			} else {
+				break;
+			}
+		} else if (count % 2 == 1) {
+			int tempCount = (count - 1) / 2;
+			if (toAdd > heap[tempCount]) {
+				int temp = heap[tempCount];
+				heap[tempCount] = toAdd;
+				heap[count] = temp;
+				count = tempCount;
+			} else {
+				break;
+			}
+		}
 	}
-      else if(count%2 == 1)
-	{
-	  int tempCount = (count - 1) / 2;
-	  if(toAdd > heap[tempCount])
-	  {
-	    int temp = heap[tempCount];
-	    heap[tempCount] = toAdd;
-	    heap[count] = toAdd;
-	    count = tempCount;
-	  }
-	  else
-	    {
-	      break;
-	    }
-	}	    
-      
-    }
-	
+}
 
+void print(int heap[], int count) {
+	if (count <= 10) {
+		print(heap, count * 2 + 1);
+		int i = 1;
+		int numOfParents = 0;
+		while (true) {
+			if (count < pow(2, i)) {
+				numOfParents = i - 1;
+				break;
+			} else {
+				i++;
+			}
+		}
+    for(int j = 0; j < numOfParents; j++)
+      {
+        cout << "   ";
+      }
+		cout << heap[count] << endl;
+		print(heap, count * 2);
+	}
 }
