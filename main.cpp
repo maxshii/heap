@@ -44,18 +44,28 @@ int main() {
 				while (file >> num) { //read in numbers from file
 					add(heap, count, num);
 					count++;
+          if(count > 100)
+          {
+            break;
+          }
 				}
 			} else {
 				cout << "Error opening file.\n";
 			}
 		}
+    cout<<endl;
+    print(heap, 1, count);
 	}
   cout<<endl;
   print(heap, 1, count-1); //print heap
-  
+
+  int last = count-1;
   for(int i = 0; i < count-1; i++) //remove from largest to smallest and print
   {
-    cout << removeMax(heap, count-1);
+    cout << removeMax(heap, last) << " ";
+    last--;
+    //cout << "tree:" << last << "\n";
+    //print(heap, 1, last);
   }
 
 }
@@ -175,55 +185,60 @@ int removeMax(int heap[], int last)
 {
   int max = heap[1];
 
-  heap[1] = heap[last];
+  heap[1] = heap[last]; //first element becomes last
   heap[last] = 0;
 
-  int depth = depthOf(last);
+  int depth = depthOf(last-1);
   int index = 1;
-  for(int i = 0; i < depth; i++)
+  while(true)
     {
-      if(heap[index] < heap[index*2] && heap[index] < heap[index*2+1]) //if parent is less than both children
+      int child1 = index*2;
+      int child2 = index*2+1;
+
+      if(child2 >= last)
       {
-        if(heap[index*2] < heap[index*2+1]) //swaps with the larger child
+        break;
+      }
+
+      if(heap[index] > heap[child1] && heap[index] > heap[child2]) //do nothing if greater than both children
+      {
+        break;
+      }
+      else if(heap[index] < heap[child1] && heap[index] < heap[child2])
+      {
+        int swapIndex = 0;
+        if(heap[child1] > heap[child2])
         {
-          //swaps parent and child
-          int childIndex = index*2+1;
-          int temp = heap[index]; //store parent value
-  				heap[index] = heap[childIndex]; //parent = child value
-  				heap[childIndex] = temp; //child = temp
-  				index = childIndex;
+          swapIndex = child1;
         }
         else
         {
-          //swaps parent and child
-          int childIndex = index*2;
-          int temp = heap[index]; //store parent value
-  				heap[index] = heap[childIndex]; //parent = child value
-  				heap[childIndex] = temp; //child = temp
-  				index = childIndex;
+          swapIndex = child2;
         }
+
+        int temp = heap[index];
+        heap[index] = heap[swapIndex];
+        heap[swapIndex] = temp;
+
+        index = swapIndex;
       }
-      else if(heap[index] < heap[index*2]) //parent is less than child 1
+      else if(heap[index] < heap[child1])
       {
-        //swaps parent and child
-        int childIndex = index*2;
-        int temp = heap[index]; //store parent value
-				heap[index] = heap[childIndex]; //parent = child value
-				heap[childIndex] = temp; //child = temp
-				index = childIndex;
+        int temp = heap[index];
+        heap[index] = heap[child1];
+        heap[child1] = temp;
+
+        index = child1;
       }
-      else if(heap[index] < heap[index*2+1]) //parent is less than child 2
+      else if(heap[index] < heap[child2])
       {
-        //swaps parent and child
-        int childIndex = index*2+1;
-        int temp = heap[index]; //store parent value
-				heap[index] = heap[childIndex]; //parent = child value
-				heap[childIndex] = temp; //child = temp
-				index = childIndex;
+        int temp = heap[index];
+        heap[index] = heap[child2];
+        heap[child2] = temp;
+
+        index = child2;
       }
-      
     }
-  
   return max;
 }
 
