@@ -188,14 +188,13 @@ int removeMax(int heap[], int last)
   heap[1] = heap[last]; //first element becomes last
   heap[last] = 0;
 
-  int depth = depthOf(last-1);
   int index = 1;
   while(true)
     {
       int child1 = index*2;
       int child2 = index*2+1;
 
-      if(child2 >= last)
+      if(child2 >= last) //break if children go past end of heap
       {
         break;
       }
@@ -204,10 +203,12 @@ int removeMax(int heap[], int last)
       {
         break;
       }
-      else if(heap[index] < heap[child1] && heap[index] < heap[child2])
+      else if(heap[index] < heap[child1] && heap[index] < heap[child2]) //if parent is less than both children
       {
         int swapIndex = 0;
-        if(heap[child1] > heap[child2])
+        
+        //determine which child to swap with
+        if(heap[child1] > heap[child2]) 
         {
           swapIndex = child1;
         }
@@ -216,13 +217,13 @@ int removeMax(int heap[], int last)
           swapIndex = child2;
         }
 
-        int temp = heap[index];
-        heap[index] = heap[swapIndex];
-        heap[swapIndex] = temp;
+        int temp = heap[index]; //store value of parent
+        heap[index] = heap[swapIndex]; //parent = value of child
+        heap[swapIndex] = temp; //child = value of parent
 
-        index = swapIndex;
+        index = swapIndex; //change index to child so it can compare again
       }
-      else if(heap[index] < heap[child1])
+      else if(heap[index] < heap[child1]) //swap if less than child 1
       {
         int temp = heap[index];
         heap[index] = heap[child1];
@@ -230,7 +231,7 @@ int removeMax(int heap[], int last)
 
         index = child1;
       }
-      else if(heap[index] < heap[child2])
+      else if(heap[index] < heap[child2]) //swap if less than child 2
       {
         int temp = heap[index];
         heap[index] = heap[child2];
